@@ -4,7 +4,7 @@
 
 This repository includes the codes for the paper: 
 
-'**A Machine Learning Benchmark for Facies Classification**' that was recently accepted in *Interpretation.* [[preprint](https://www.dropbox.com/s/nzes3zita8j4bw5/Interpretation2019_preprint.pdf)]
+'**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to *Interpretation.* [[preprint](https://www.dropbox.com/s/nzes3zita8j4bw5/Interpretation2019_preprint.pdf)]
 
 --------
 
