@@ -8,7 +8,7 @@ This repository includes the codes for the paper:
 
 --------
 
-![model](/Users/Yazeed/Documents/facies_classification_benchmark/model.png)
+![model](model.png)
 
 ## Abstract
 
