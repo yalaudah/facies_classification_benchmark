@@ -101,20 +101,7 @@ In order to be consistent with the results of the paper, we suggest you keep all
 
 ## Citation: 
 
-If you have found our code and data useful, we kindly ask you to cite our work. For LaTex, you can use the BibTex citation below: 
-
-```bash
-@article{alaudah2019FCB,
-  title={A Machine Learning Benchmark for Facies Classification},
-  author={Alaudah, Yazeed and Michalowicz, Patrycja and AlFarraj, Motaz and AlRegib, Ghassan},
-  journal={Interpretation},
-  year={2019},
-  publisher={SEG}
-}
-```
-
-Or for other citation formats, you can visit [here](https://arxiv2bibtex.org/). 
-
+If you have found our code and data useful, we kindly ask you to cite our work. The citation will be listed below as soon as the paper is published. 
 
 
 ## Questions?
