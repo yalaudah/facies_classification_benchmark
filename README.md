@@ -4,7 +4,7 @@
 
 This repository includes the codes for the paper: 
 
-'**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to *Interpretation.* [[preprint](https://www.dropbox.com/s/nzes3zita8j4bw5/Interpretation2019_preprint.pdf)]
+'**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to the SEG *Interpretation* journal. [preprint](https://arxiv.org/abs/1901.07659)
 
 --------
 
@@ -101,7 +101,16 @@ In order to be consistent with the results of the paper, we suggest you keep all
 
 ## Citation: 
 
-If you have found our code and data useful, we kindly ask you to cite our work. The citation will be listed below as soon as the paper is published. 
+If you have found our code and data useful, we kindly ask you to cite our work. You can cite the arXiv preprint for now: 
+```tex
+@misc{1901.07659,
+Author = {Yazeed Alaudah and Patrycja Michalowicz and Motaz Alfarraj and Ghassan AlRegib},
+Title = {A Machine Learning Benchmark for Facies Classification},
+Year = {2019},
+Eprint = {arXiv:1901.07659},
+}
+```
+The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://arxiv.org/abs/1901.07659).
 
 
 ## Questions?
