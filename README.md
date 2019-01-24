@@ -6,6 +6,8 @@ This repository includes the codes for the paper:
 
 '**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to the SEG *Interpretation* journal. [preprint](https://arxiv.org/abs/1901.07659)
 
+The code in mainly built using the [PyTorch](https://pytorch.org/) deep learning library. 
+
 --------
 
 ![model](model.png)
@@ -27,19 +29,22 @@ To download the training and testing data, run the following commands in the ter
 wget https://www.dropbox.com/s/7c0uj268o4hcxwr/data.zip 
 # check that the md5 checksum matches: 
 openssl dgst -md5 data.zip # Make sure the result looks like this: MD5(data.zip)= bc5932279831a95c0b244fd765376d85, otherwise the downloaded data.zip is corrupted. 
-# unzip
+# unzip the data:
 unzip data.zip 
+# create a directory where the train/val/test splits will be stored:
+mkdir data/splits
 ```
 
-Alternatively, you can click [here](https://www.dropbox.com/s/7c0uj268o4hcxwr/data.zip) to download the data directly. Make sure you have the following folder structure after you unzip the file: 
+Alternatively, you can click [here](https://www.dropbox.com/s/7c0uj268o4hcxwr/data.zip) to download the data directly. Make sure you have the following folder structure in the `data` directory after you unzip the file: 
 
 ```bash
 data
+├── splits
 ├── test_once
-│   ├── test1_labels.npy
-│   ├── test1_seismic.npy
-│   ├── test2_labels.npy
-│   └── test2_seismic.npy
+│   ├── test1_labels.npy
+│   ├── test1_seismic.npy
+│   ├── test2_labels.npy
+│   └── test2_seismic.npy
 └── train
     ├── train_labels.npy
     └── train_seismic.npy
