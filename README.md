@@ -107,11 +107,11 @@ In order to be consistent with the results of the paper, we suggest you keep all
 
 If you have found our code and data useful, we kindly ask you to cite our work. You can cite the arXiv preprint for now: 
 ```tex
-@misc{1901.07659,
-Author = {Yazeed Alaudah and Patrycja Michalowicz and Motaz Alfarraj and Ghassan AlRegib},
-Title = {A Machine Learning Benchmark for Facies Classification},
-Year = {2019},
-Eprint = {arXiv:1901.07659},
+@article{alaudah2019machine,
+  title={A Machine Learning Benchmark for Facies Classification},
+  author={Alaudah, Yazeed and Michalowicz, Patrycja and Alfarraj, Motaz and AlRegib, Ghassan},
+  journal={arXiv preprint arXiv:1901.07659},
+  year={2019}
 }
 ```
 The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://arxiv.org/abs/1901.07659).
