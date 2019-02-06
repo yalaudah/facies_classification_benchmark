@@ -1,6 +1,6 @@
 # A Machine Learning Benchmark for Facies Classification
 
-[Yazeed Alaudah](http://www.yalaudah.com), Patrycja Michalowicz, Motaz AlFarraj, and [Ghassan AlRegib](http://www.ghassanalregib.com)
+[Yazeed Alaudah](http://www.yalaudah.com), Patrycja Michalowicz, [Motaz Alfarraj](http://www.motaz.me), and [Ghassan AlRegib](http://www.ghassanalregib.com)
 
 This repository includes the codes for the paper: 
 
