@@ -18,7 +18,7 @@ from core.augmentations import (
 from core.loader.data_loader import *
 from core.metrics import runningScore
 from core.models import get_model
-
+from core.utils import np_to_tb
 
 def split_train_val(args, per_val=0.1):
     # create inline and crossline sections for training and validation:
@@ -201,7 +201,7 @@ def train(args):
                 correct_label_decoded = train_set.decode_segmap(
                     np.squeeze(labels_original))
                 writer.add_image('train/original_label',
-                                 correct_label_decoded, epoch + 1)
+                                 np_to_tb(correct_label_decoded), epoch + 1)
                 out = F.softmax(outputs, dim=1)
 
                 # this returns the max. channel number:
@@ -212,7 +212,7 @@ def train(args):
                     confidence, normalize=True, scale_each=True)
 
                 decoded = train_set.decode_segmap(np.squeeze(prediction))
-                writer.add_image('train/predicted', decoded, epoch + 1)
+                writer.add_image('train/predicted', np_to_tb(decoded), epoch + 1)
                 writer.add_image('train/confidence', tb_confidence, epoch + 1)
 
                 unary = outputs.cpu().detach()
@@ -276,7 +276,7 @@ def train(args):
                         correct_label_decoded = train_set.decode_segmap(
                             np.squeeze(labels_original))
                         writer.add_image('val/original_label',
-                                         correct_label_decoded, epoch + 1)
+                                         np_to_tb(correct_label_decoded), epoch + 1)
 
                         out = F.softmax(outputs_val, dim=1)
 
@@ -287,11 +287,9 @@ def train(args):
                         tb_confidence = vutils.make_grid(
                             confidence, normalize=True, scale_each=True)
 
-                        decoded = train_set.decode_segmap(
-                            np.squeeze(prediction))
-                        writer.add_image('val/predicted', decoded, epoch + 1)
-                        writer.add_image('val/confidence',
-                                         tb_confidence, epoch + 1)
+                        decoded = train_set.decode_segmap(np.squeeze(prediction))
+                        writer.add_image('val/predicted', np_to_tb(decoded), epoch + 1)
+                        writer.add_image('val/confidence',tb_confidence, epoch + 1)
 
                         unary = outputs.cpu().detach()
                         unary_max, unary_min = torch.max(
@@ -350,7 +348,7 @@ if __name__ == '__main__':
                         help='Path to previous saved model to restart from')
     parser.add_argument('--clip', nargs='?', type=float, default=0.1,
                         help='Max norm of the gradients if clipping. Set to zero to disable. ')
-    parser.add_argument('--per_val', nargs='?', type=float, default=0,
+    parser.add_argument('--per_val', nargs='?', type=float, default=0.2,
                         help='percentage of the training data for validation')
     parser.add_argument('--pretrained', nargs='?', type=bool, default=False,
                         help='Pretrained models not supported. Keep as False for now.')
