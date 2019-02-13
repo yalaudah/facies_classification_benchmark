@@ -19,7 +19,7 @@ from core.augmentations import (
 from core.loader.data_loader import *
 from core.metrics import runningScore
 from core.models import get_model
-
+from core.utils import np_to_tb
 
 def split_train_val(args, per_val=0.1):
     # create inline and crossline pacthes for training and validation:
@@ -205,10 +205,8 @@ def train(args):
                                  tb_original_image, epoch + 1)
 
                 labels_original = labels_original.numpy()[0]
-                correct_label_decoded = train_set.decode_segmap(
-                    np.squeeze(labels_original))
-                writer.add_image('train/original_label',
-                                 correct_label_decoded, epoch + 1)
+                correct_label_decoded = train_set.decode_segmap(np.squeeze(labels_original))
+                writer.add_image('train/original_label',np_to_tb(correct_label_decoded), epoch + 1)
                 out = F.softmax(outputs, dim=1)
 
                 # this returns the max. channel number:
@@ -219,7 +217,7 @@ def train(args):
                     confidence, normalize=True, scale_each=True)
 
                 decoded = train_set.decode_segmap(np.squeeze(prediction))
-                writer.add_image('train/predicted', decoded, epoch + 1)
+                writer.add_image('train/predicted', np_to_tb(decoded), epoch + 1)
                 writer.add_image('train/confidence', tb_confidence, epoch + 1)
 
                 unary = outputs.cpu().detach()
@@ -232,8 +230,7 @@ def train(args):
                     decoded_channel = unary[0][channel]
                     tb_channel = vutils.make_grid(
                         decoded_channel, normalize=True, scale_each=True)
-                    writer.add_image(
-                        f'train_classes/_{class_names[channel]}', tb_channel, epoch + 1)
+                    writer.add_image(f'train_classes/_{class_names[channel]}', tb_channel, epoch + 1)
 
         # Average metrics, and save in writer()
         loss_train /= total_iteration
@@ -283,7 +280,7 @@ def train(args):
                         correct_label_decoded = train_set.decode_segmap(
                             np.squeeze(labels_original))
                         writer.add_image('val/original_label',
-                                         correct_label_decoded, epoch + 1)
+                                         np_to_tb(correct_label_decoded), epoch + 1)
 
                         out = F.softmax(outputs_val, dim=1)
 
@@ -296,7 +293,7 @@ def train(args):
 
                         decoded = train_set.decode_segmap(
                             np.squeeze(prediction))
-                        writer.add_image('val/predicted', decoded, epoch + 1)
+                        writer.add_image('val/predicted', np_to_tb(decoded), epoch + 1)
                         writer.add_image('val/confidence',
                                          tb_confidence, epoch + 1)
 
@@ -357,7 +354,7 @@ if __name__ == '__main__':
                         help='Path to previous saved model to restart from')
     parser.add_argument('--clip', nargs='?', type=float, default=0.1,
                         help='Max norm of the gradients if clipping. Set to zero to disable. ')
-    parser.add_argument('--per_val', nargs='?', type=float, default=0,
+    parser.add_argument('--per_val', nargs='?', type=float, default=0.2,
                         help='percentage of the training data for validation')
     parser.add_argument('--stride', nargs='?', type=int, default=50,
                         help='The vertical and horizontal stride when we are sampling patches from the volume.' +
