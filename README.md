@@ -116,7 +116,8 @@ If you have found our code and data useful, we kindly ask you to cite our work. 
   title={A Machine Learning Benchmark for Facies Classification},
   author={Alaudah, Yazeed and Michalowicz, Patrycja and Alfarraj, Motaz and AlRegib, Ghassan},
   journal={arXiv preprint arXiv:1901.07659},
-  year={2019}
+  year={2019},
+  doi = {10.5281/zenodo.2565733},
 }
 ```
 The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://arxiv.org/abs/1901.07659).
