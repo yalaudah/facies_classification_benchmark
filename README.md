@@ -2,6 +2,11 @@
 
 [Yazeed Alaudah](http://www.yalaudah.com), Patrycja Michalowicz, [Motaz Alfarraj](http://www.motaz.me), and [Ghassan AlRegib](http://www.ghassanalregib.com)
 
+
+[![DOI](https://zenodo.org/badge/165411165.svg)](https://zenodo.org/badge/latestdoi/165411165)
+
+
+
 This repository includes the codes for the paper: 
 
 '**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to the SEG *Interpretation* journal. [preprint](https://arxiv.org/abs/1901.07659)
