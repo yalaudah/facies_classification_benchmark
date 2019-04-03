@@ -190,6 +190,10 @@ def test(args):
     print(f'Freq Weighted IoU: {score["Freq Weighted IoU: "]:.3f}')
     print(f'Mean IoU: {score["Mean IoU: "]:0.3f}')
 
+    # Save confusion matrix: 
+    confusion = score['confusion_matrix']
+    np.savetxt(pjoin(log_dir,'confusion.csv'), confusion, delimiter=" ")
+
     writer.close()
     return
 
