@@ -21,6 +21,12 @@ from core.metrics import runningScore
 from core.models import get_model
 from core.utils import np_to_tb
 
+# Fix the random seeds: 
+torch.backends.cudnn.deterministic = True
+torch.manual_seed(2019)
+if torch.cuda.is_available(): torch.cuda.manual_seed_all(2019)
+np.random.seed(seed=2019)
+
 def split_train_val(args, per_val=0.1):
     # create inline and crossline pacthes for training and validation:
     loader_type = 'patch'
