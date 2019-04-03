@@ -21,6 +21,12 @@ from core.metrics import runningScore
 from core.models import get_model
 from core.utils import np_to_tb
 
+# Fix the random seeds: 
+torch.backends.cudnn.deterministic = True
+torch.manual_seed(2019)
+if torch.cuda.is_available(): torch.cuda.manual_seed_all(2019)
+np.random.seed(seed=2019)
+
 def split_train_val(args, per_val=0.1):
     # create inline and crossline pacthes for training and validation:
     loader_type = 'patch'
@@ -85,7 +91,7 @@ def train(args):
 
     current_time = datetime.now().strftime('%b%d_%H%M%S')
     log_dir = os.path.join('runs', current_time +
-                           "_{}_{}".format(args.arch, args.loss))
+                           "_{}".format(args.arch))
     writer = SummaryWriter(log_dir=log_dir)
     # Setup Augmentations
     if args.aug:
@@ -145,10 +151,7 @@ def train(args):
         # optimizer = torch.optim.Adadelta(model.parameters())
         optimizer = torch.optim.Adam(model.parameters(), amsgrad=True)
 
-    if(args.loss == 'FL'):
-        loss_fn = core.loss.focal_loss2d
-    else:
-        loss_fn = core.loss.cross_entropy
+    loss_fn = core.loss.cross_entropy
 
     if args.class_weights:
         # weights are inversely proportional to the frequency of the classes in the training set
@@ -327,14 +330,14 @@ def train(args):
                 if score['Mean IoU: '] >= best_iou:
                     best_iou = score['Mean IoU: ']
                     model_dir = os.path.join(
-                        log_dir, f"{args.arch}_{args.loss}_model.pkl")
+                        log_dir, f"{args.arch}_model.pkl")
                     torch.save(model, model_dir)
 
         else:  # validation is turned off:
             # just save the latest model:
             if (epoch+1) % 5 == 0:
                 model_dir = os.path.join(
-                    log_dir, f"{args.arch}_{args.loss}_ep{epoch+1}_model.pkl")
+                    log_dir, f"{args.arch}_ep{epoch+1}_model.pkl")
                 torch.save(model, model_dir)
 
     writer.close()
@@ -344,8 +347,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hyperparams')
     parser.add_argument('--arch', nargs='?', type=str, default='patch_deconvnet',
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
-    parser.add_argument('--loss', nargs='?', type=str, default='CE',
-                        help='FL (focal loss), CE (cross entropy)')
     parser.add_argument('--n_epoch', nargs='?', type=int, default=101,
                         help='# of the epochs')
     parser.add_argument('--batch_size', nargs='?', type=int, default=64,

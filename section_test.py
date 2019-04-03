@@ -9,6 +9,7 @@ from tensorboardX import SummaryWriter
 import torchvision.utils as vutils
 from core.loader.data_loader import *
 from core.metrics import runningScore
+from core.utils import np_to_tb
 
 
 def test(args):
@@ -86,10 +87,9 @@ def test(args):
                                      tb_original_image, i)
 
                     labels_original = labels_original.numpy()[0]
-                    correct_label_decoded = test_set.decode_segmap(
-                        np.squeeze(labels_original))
+                    correct_label_decoded = test_set.decode_segmap(np.squeeze(labels_original))
                     writer.add_image('test/original_label',
-                                     correct_label_decoded, i)
+                                     np_to_tb(correct_label_decoded), i)
                     out = F.softmax(outputs, dim=1)
 
                     # this returns the max. channel number:
@@ -100,20 +100,20 @@ def test(args):
                         confidence, normalize=True, scale_each=True)
 
                     decoded = test_set.decode_segmap(np.squeeze(prediction))
-                    writer.add_image('test/predicted', decoded, i)
+                    writer.add_image('test/predicted', np_to_tb(decoded), i)
                     writer.add_image('test/confidence', tb_confidence, i)
 
                     # uncomment if you want to visualize the different class heatmaps
-                    # unary = outputs.cpu().detach()
-                    # unary_max = torch.max(unary)
-                    # unary_min = torch.min(unary)
-                    # unary = unary.add((-1*unary_min))
-                    # unary = unary/(unary_max - unary_min)
+                    unary = outputs.cpu().detach()
+                    unary_max = torch.max(unary)
+                    unary_min = torch.min(unary)
+                    unary = unary.add((-1*unary_min))
+                    unary = unary/(unary_max - unary_min)
 
-                    # for channel in range(0, len(class_names)):
-                    #     decoded_channel = unary[0][channel]
-                    #     tb_channel = vutils.make_grid(decoded_channel, normalize=True, scale_each=True)
-                    #     writer.add_image(f'test_classes/_{class_names[channel]}', tb_channel, i)
+                    for channel in range(0, len(class_names)):
+                        decoded_channel = unary[0][channel]
+                        tb_channel = vutils.make_grid(decoded_channel, normalize=True, scale_each=True)
+                        writer.add_image(f'test_classes/_{class_names[channel]}', tb_channel, i)
 
         # get scores and save in writer()
         score, class_iou = running_metrics_split.get_scores()
@@ -157,6 +157,10 @@ def test(args):
     print(f'Mean Class Acc: {score["Mean Class Acc: "]:.3f}')
     print(f'Freq Weighted IoU: {score["Freq Weighted IoU: "]:.3f}')
     print(f'Mean IoU: {score["Mean IoU: "]:0.3f}')
+
+    # Save confusion matrix: 
+    confusion = score['confusion_matrix']
+    np.savetxt(pjoin(log_dir,'confusion.csv'), confusion, delimiter=" ")
 
     writer.close()
     return

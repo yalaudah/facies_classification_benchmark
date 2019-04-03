@@ -20,11 +20,8 @@ class Compose(object):
 
 class AddNoise(object):
     def __call__(self, img, mask):
-        if random.random() < 0.5:
-            noise = np.random.normal(loc=0,scale=0.15,size=(img.size[1], img.size[0]))
-            return img + noise, mask
-        else:
-            return img, mask
+        noise = np.random.normal(loc=0,scale=0.02,size=(img.size[1], img.size[0]))
+        return img + noise, mask
 
 class RandomCrop(object):
     def __init__(self, size, padding=0):

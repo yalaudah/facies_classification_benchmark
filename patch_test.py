@@ -9,6 +9,7 @@ from tensorboardX import SummaryWriter
 import torchvision.utils as vutils
 from core.loader.data_loader import *
 from core.metrics import runningScore
+from core.utils import np_to_tb
 
 
 def patch_label_2d(model, img, patch_size, stride):
@@ -121,7 +122,7 @@ def test(args):
                     correct_label_decoded = test_set.decode_segmap(
                         np.squeeze(labels_original))
                     writer.add_image('test/original_label',
-                                     correct_label_decoded, i)
+                                     np_to_tb(correct_label_decoded), i)
                     out = F.softmax(outputs, dim=1)
 
                     # this returns the max. channel number:
@@ -132,7 +133,7 @@ def test(args):
                         confidence, normalize=True, scale_each=True)
 
                     decoded = test_set.decode_segmap(np.squeeze(prediction))
-                    writer.add_image('test/predicted', decoded, i)
+                    writer.add_image('test/predicted', np_to_tb(decoded), i)
                     writer.add_image('test/confidence', tb_confidence, i)
 
                     # uncomment if you want to visualize the different class heatmaps
@@ -189,6 +190,10 @@ def test(args):
     print(f'Mean Class Acc: {score["Mean Class Acc: "]:.3f}')
     print(f'Freq Weighted IoU: {score["Freq Weighted IoU: "]:.3f}')
     print(f'Mean IoU: {score["Mean IoU: "]:0.3f}')
+    
+    # Save confusion matrix: 
+    confusion = score['confusion_matrix']
+    np.savetxt(pjoin(log_dir,'confusion.csv'), confusion, delimiter=" ")
 
     writer.close()
     return
@@ -196,7 +201,7 @@ def test(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
-    parser.add_argument('--model_path', nargs='?', type=str,                                        default='path/to/model.pkl',
+    parser.add_argument('--model_path', nargs='?', type=str, default='path/to/model.pkl',
                         help='Path to the saved model')
     parser.add_argument('--split', nargs='?', type=str, default='both',
                         help='Choose from: "test1", "test2", or "both" to change which region to test on')
