@@ -38,7 +38,8 @@ class runningScore(object):
                 'Class Accuracy: ': acc_cls,
                 'Mean Class Acc: ': mean_acc_cls,
                 'Freq Weighted IoU: ': fwavacc,
-                'Mean IoU: ': mean_iu,}, cls_iu
+                'Mean IoU: ': mean_iu,
+                'confusion_matrix': self.confusion_matrix}, cls_iu
 
     def reset(self):
         self.confusion_matrix = np.zeros((self.n_classes, self.n_classes))
