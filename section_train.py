@@ -340,7 +340,7 @@ def train(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hyperparams')
-    parser.add_argument('--arch', nargs='?', type=str, default='patch_deconvnet',
+    parser.add_argument('--arch', nargs='?', type=str, default='section_deconvnet',
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
     parser.add_argument('--n_epoch', nargs='?', type=int, default=61,
                         help='# of the epochs')
@@ -350,7 +350,7 @@ if __name__ == '__main__':
                         help='Path to previous saved model to restart from')
     parser.add_argument('--clip', nargs='?', type=float, default=0.1,
                         help='Max norm of the gradients if clipping. Set to zero to disable. ')
-    parser.add_argument('--per_val', nargs='?', type=float, default=0.2,
+    parser.add_argument('--per_val', nargs='?', type=float, default=0.1,
                         help='percentage of the training data for validation')
     parser.add_argument('--pretrained', nargs='?', type=bool, default=False,
                         help='Pretrained models not supported. Keep as False for now.')
