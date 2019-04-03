@@ -200,7 +200,7 @@ def test(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
-    parser.add_argument('--model_path', nargs='?', type=str,                                        default='path/to/model.pkl',
+    parser.add_argument('--model_path', nargs='?', type=str, default='path/to/model.pkl',
                         help='Path to the saved model')
     parser.add_argument('--split', nargs='?', type=str, default='both',
                         help='Choose from: "test1", "test2", or "both" to change which region to test on')
