@@ -104,16 +104,16 @@ def test(args):
                     writer.add_image('test/confidence', tb_confidence, i)
 
                     # uncomment if you want to visualize the different class heatmaps
-                    # unary = outputs.cpu().detach()
-                    # unary_max = torch.max(unary)
-                    # unary_min = torch.min(unary)
-                    # unary = unary.add((-1*unary_min))
-                    # unary = unary/(unary_max - unary_min)
+                    unary = outputs.cpu().detach()
+                    unary_max = torch.max(unary)
+                    unary_min = torch.min(unary)
+                    unary = unary.add((-1*unary_min))
+                    unary = unary/(unary_max - unary_min)
 
-                    # for channel in range(0, len(class_names)):
-                    #     decoded_channel = unary[0][channel]
-                    #     tb_channel = vutils.make_grid(decoded_channel, normalize=True, scale_each=True)
-                    #     writer.add_image(f'test_classes/_{class_names[channel]}', tb_channel, i)
+                    for channel in range(0, len(class_names)):
+                        decoded_channel = unary[0][channel]
+                        tb_channel = vutils.make_grid(decoded_channel, normalize=True, scale_each=True)
+                        writer.add_image(f'test_classes/_{class_names[channel]}', tb_channel, i)
 
         # get scores and save in writer()
         score, class_iou = running_metrics_split.get_scores()
