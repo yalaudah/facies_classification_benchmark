@@ -333,7 +333,7 @@ def train(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hyperparams')
-    parser.add_argument('--arch', nargs='?', type=str, default='',
+    parser.add_argument('--arch', nargs='?', type=str, default='patch_deconvnet',
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
     parser.add_argument('--n_epoch', nargs='?', type=int, default=61,
                         help='# of the epochs')
