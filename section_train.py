@@ -70,7 +70,7 @@ def train(args):
     # Setup Augmentations
     if args.aug:
         data_aug = Compose(
-            [RandomRotate(25), RandomHorizontallyFlip(), AddNoise()])
+            [RandomRotate(10), RandomHorizontallyFlip(), AddNoise()])
     else:
         data_aug = None
 
