@@ -9,6 +9,7 @@ from tensorboardX import SummaryWriter
 import torchvision.utils as vutils
 from core.loader.data_loader import *
 from core.metrics import runningScore
+from core.utils import np_to_tb
 
 
 def patch_label_2d(model, img, patch_size, stride):
@@ -121,7 +122,7 @@ def test(args):
                     correct_label_decoded = test_set.decode_segmap(
                         np.squeeze(labels_original))
                     writer.add_image('test/original_label',
-                                     correct_label_decoded, i)
+                                     np_to_tb(correct_label_decoded), i)
                     out = F.softmax(outputs, dim=1)
 
                     # this returns the max. channel number:
@@ -132,7 +133,7 @@ def test(args):
                         confidence, normalize=True, scale_each=True)
 
                     decoded = test_set.decode_segmap(np.squeeze(prediction))
-                    writer.add_image('test/predicted', decoded, i)
+                    writer.add_image('test/predicted', np_to_tb(decoded), i)
                     writer.add_image('test/confidence', tb_confidence, i)
 
                     # uncomment if you want to visualize the different class heatmaps
