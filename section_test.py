@@ -79,7 +79,8 @@ def test(args):
                 running_metrics_split.update(gt, pred)
                 running_metrics_overall.update(gt, pred)
 
-                numbers = [0, 50]
+                numbers = [0, 99, 149, 399, 499]
+
                 if i in numbers:
                     tb_original_image = vutils.make_grid(
                         image_original[0][0], normalize=True, scale_each=True)
