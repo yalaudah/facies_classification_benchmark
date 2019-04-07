@@ -11,6 +11,7 @@ from core.loader.data_loader import *
 from core.metrics import runningScore
 from core.utils import np_to_tb
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def patch_label_2d(model, img, patch_size, stride):
     img = torch.squeeze(img)
@@ -43,8 +44,6 @@ def patch_label_2d(model, img, patch_size, stride):
 
 
 def test(args):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     log_dir, model_name = os.path.split(args.model_path)
     # load model:
     model = torch.load(args.model_path)
@@ -100,7 +99,7 @@ def test(args):
                 print(f'split: {split}, section: {i}')
                 total_iteration = total_iteration + 1
                 image_original, labels_original = images, labels
-
+                images = images.to(device)
                 outputs = patch_label_2d(model=model,
                                          img=images,
                                          patch_size=args.train_patch_size,
