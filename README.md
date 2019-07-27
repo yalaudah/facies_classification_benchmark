@@ -9,7 +9,7 @@
 
 This repository includes the codes for the paper: 
 
-'**A Machine Learning Benchmark for Facies Classification**' that was recently submitted to the SEG *Interpretation* journal. [preprint](https://arxiv.org/abs/1901.07659)
+'**A Machine Learning Benchmark for Facies Classification**' that is published in the SEG *Interpretation* journal. [[arXiv]](https://arxiv.org/abs/1901.07659)[[SEG Digital Library]](https://library.seg.org/doi/10.1190/INT-2018-0249.1)
 
 The code in mainly built using the [PyTorch](https://pytorch.org/) deep learning library. 
 
@@ -113,14 +113,19 @@ In order to be consistent with the results of the paper, we suggest you keep all
 If you have found our code and data useful, we kindly ask you to cite our work. You can cite the arXiv preprint for now: 
 ```tex
 @article{alaudah2019machine,
-  title={A Machine Learning Benchmark for Facies Classification},
-  author={Alaudah, Yazeed and Michalowicz, Patrycja and Alfarraj, Motaz and AlRegib, Ghassan},
-  journal={arXiv preprint arXiv:1901.07659},
-  year={2019},
-  doi = {10.5281/zenodo.2565733},
+author = {Yazeed Alaudah and Patrycja Michałowicz and Motaz Alfarraj and Ghassan AlRegib},
+title = {A machine-learning benchmark for facies classification},
+journal = {Interpretation},
+volume = {7},
+number = {3},
+pages = {SE175-SE187},
+year = {2019},
+doi = {10.1190/INT-2018-0249.1},
+URL = {https://doi.org/10.1190/INT-2018-0249.1},
+eprint = {https://doi.org/10.1190/INT-2018-0249.1}
 }
 ```
-The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://arxiv.org/abs/1901.07659).
+The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://arxiv.org/abs/1901.07659). The paper is also available in the SEG Digital Library: [https://library.seg.org/doi/10.1190/INT-2018-0249.1](https://library.seg.org/doi/10.1190/INT-2018-0249.1)
 
 
 ## Questions?
