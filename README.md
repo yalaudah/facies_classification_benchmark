@@ -40,7 +40,7 @@ unzip data.zip
 mkdir data/splits
 ```
 
-Alternatively, you can click [here](https://www.dropbox.com/s/o29vrsm1cvx395h/data.zip) to download the data directly. Make sure you have the following folder structure in the `data` directory after you unzip the file: 
+Alternatively, you can click [here](https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip) to download the data directly. Make sure you have the following folder structure in the `data` directory after you unzip the file: 
 
 ```bash
 data
@@ -64,7 +64,7 @@ train_seismic = np.load('data/train/train_seismic.npy')
 
 **Make sure the testing data is only used once after all models are trained. Using the test set multiple times makes it a validation set.**
 
-We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/qqt1vkybyqvs3fp/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/mff0bwc3v3ds03y/logs.zip).
+We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/cvfrud3kp3o69ar/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/vupljhjd3pqr8du/logs.zip).
 
   
 
