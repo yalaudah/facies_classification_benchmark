@@ -31,7 +31,7 @@ To download the training and testing data, run the following commands in the ter
 
 ```bash
 # download the files: 
-wget https://www.dropbox.com/s/o29vrsm1cvx395h/data.zip 
+wget https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip 
 # check that the md5 checksum matches: 
 openssl dgst -md5 data.zip # Make sure the result looks like this: MD5(data.zip)= bc5932279831a95c0b244fd765376d85, otherwise the downloaded data.zip is corrupted. 
 # unzip the data:
