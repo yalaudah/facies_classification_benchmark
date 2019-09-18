@@ -35,7 +35,7 @@ class patch_loader(data.Dataset):
             self.seismic = np.load(pjoin('data','test_once','test2_seismic.npy'))
             self.labels = np.load(pjoin('data','test_once','test2_labels.npy'))
         else:
-            ValueError('Unknown split.')
+            raise ValueError('Unknown split.')
 
         if 'test' not in self.split:
             # We are in train/val mode. Most likely the test splits are not saved yet, 
@@ -54,7 +54,7 @@ class patch_loader(data.Dataset):
             # patch_list = [id_.rstrip() for id_ in patch_list]
             self.patches[split] = patch_list
         else:
-            ValueError('Unknown split.')
+            raise ValueError('Unknown split.')
 
     def pad_volume(self,volume):
         '''
@@ -165,7 +165,7 @@ class section_loader(data.Dataset):
             self.seismic = np.load(pjoin('data','test_once','test2_seismic.npy'))
             self.labels = np.load(pjoin('data','test_once','test2_labels.npy'))
         else:
-            ValueError('Unknown split.')
+            raise ValueError('Unknown split.')
 
         if 'test' not in self.split:
             # We are in train/val mode. Most likely the test splits are not saved yet, 
@@ -184,7 +184,7 @@ class section_loader(data.Dataset):
             file_list = [id_.rstrip() for id_ in file_list]
             self.sections[split] = file_list
         else:
-            ValueError('Unknown split.')
+            raise ValueError('Unknown split.')
 
 
     def __len__(self):
