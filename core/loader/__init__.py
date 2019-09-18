@@ -6,4 +6,4 @@ def get_loader(arch):
     elif 'section' in arch:
         return section_loader
     else:
-        NotImplementedError()
+        raise NotImplementedError()
