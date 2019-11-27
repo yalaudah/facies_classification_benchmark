@@ -64,7 +64,7 @@ train_seismic = np.load('data/train/train_seismic.npy')
 
 **Make sure the testing data is only used once after all models are trained. Using the test set multiple times makes it a validation set.**
 
-We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/jken23jed6cbjhc/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/vupljhjd3pqr8du/logs.zip).
+We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/jken23jed6cbjhc/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/rlir26u7wj17496/logs.zip). 
 
   
 
