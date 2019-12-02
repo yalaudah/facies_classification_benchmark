@@ -23,12 +23,24 @@ The recent interest in using deep learning for seismic interpretation tasks, suc
 
 To address these issues, we open-source an accurate 3D geological model of the Netherlands F3 Block. This geological model is based on both well log data and 3D seismic data and is grounded on the careful study of the geology of the region. Furthermore, we propose two baseline models for facies classification based on deconvolution networks and make their codes publicly available. Finally, we propose a scheme for evaluating different models on this dataset, and we share the results of our baseline models. In addition to making the dataset and the code publicly available, this work can help advance research in this area and create an objective benchmark for comparing the results of different machine learning approaches for facies classification for researchers to use in the future.
 
+
+
 ## Dataset
-In order to receive the download link, please fill out this 
-[FORM](https://forms.gle/xJ14YqUVbKmqeZRy8) to submit your information and agree the conditions of use. This information will be kept confidential and will not be released to anybody outside our administration team.
 
+To download the training and testing data, run the following commands in the terminal: 
 
-Make sure you have the following folder structure in the `data` directory after you unzip the file: 
+```bash
+# download the files: 
+wget https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip
+# check that the md5 checksum matches: 
+openssl dgst -md5 data.zip # Make sure the result looks like this: MD5(data.zip)= bc5932279831a95c0b244fd765376d85, otherwise the downloaded data.zip is corrupted. 
+# unzip the data:
+unzip data.zip 
+# create a directory where the train/val/test splits will be stored:
+mkdir data/splits
+```
+
+Alternatively, you can click [here](https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip) to download the data directly. Make sure you have the following folder structure in the `data` directory after you unzip the file: 
 
 ```bash
 data
@@ -52,7 +64,7 @@ train_seismic = np.load('data/train/train_seismic.npy')
 
 **Make sure the testing data is only used once after all models are trained. Using the test set multiple times makes it a validation set.**
 
-We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/cvfrud3kp3o69ar/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/vupljhjd3pqr8du/logs.zip).
+We also provide fault planes, and the raw horizons that were used to generate the data volumes in addition to the processed data volumes before splitting to training and testing. If you're interested in this data, you can download it from [here](https://www.dropbox.com/s/cvfrud3kp3o69ar/raw.zip). In addition, you can download the well log files from [here](https://www.dropbox.com/s/vupljhjd3pqr8du/logs.zip). 
 
   
 
@@ -93,7 +105,7 @@ To test a model, you have to specify the path to the trained model. For example,
 python patch_test.py --model_path 'path/to/trained_model.pkl' 
 ```
 
-In order to be consistent with the results of the paper, we suggest you keep all the test options to theirdeafault values (such as `test_stride` , `crossline` and `inline` ). Feel free to change the test `split` if you do not want to test on both test splits, and make sure you update `train_patch_size` if it was changed during training. Once the test code is finished, it will print the results in the terminal. You can also view the test results, both images and metrics, in Tensorboard.  
+In order to be consistent with the results of the paper, we suggest you keep all the test options to their deafault values (such as `test_stride` , `crossline` and `inline` ). Feel free to change the test `split` if you do not want to test on both test splits, and make sure you update `train_patch_size` if it was changed during training. Once the test code is finished, it will print the results in the terminal. You can also view the test results, both images and metrics, in Tensorboard.  
 
 
 ## Citation: 
@@ -118,20 +130,4 @@ The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://a
 
 ## Questions?
 
-The code and data are provided as is with no guarantees. If you have any questions, regarding the dataset or the code, you can contact me at (alaudah@gatech.edu), or even better open an issue in this repo and we'll do our best to help.
-
-
-
-<!--
-To download the training and testing data, run the following commands in the terminal:
-```bash
-# download the files: 
-wget https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip 
-# check that the md5 checksum matches: 
-openssl dgst -md5 data.zip # Make sure the result looks like this: MD5(data.zip)= bc5932279831a95c0b244fd765376d85, otherwise the downloaded data.zip is corrupted. 
-# unzip the data:
-unzip data.zip 
-# create a directory where the train/val/test splits will be stored:
-mkdir data/splits
-```
-Alternatively, you can click [here](https://www.dropbox.com/s/p6cbgbocxwj04sw/data.zip) to download the data directly --!>
+The code and data are provided as is with no guarantees. If you have any questions, regarding the dataset or the code, you can contact me at (yalaudah [at] gmail [dot] com), or even better open an issue in this repo and we'll do our best to help.
