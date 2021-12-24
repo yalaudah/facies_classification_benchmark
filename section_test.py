@@ -25,7 +25,11 @@ def test(args):
                    'rijnland_chalk', 'scruff', 'zechstein']
     running_metrics_overall = runningScore(6)
 
-    splits = [args.split if 'both' not in args.split else 'test1', 'test2']
+    if "both" in args.split: 
+        splits = ["test1", "test2"]
+    else:
+        splits = args.split
+
     for sdx, split in enumerate(splits):
         # define indices of the array
         labels = np.load(pjoin('data', 'test_once', split + '_labels.npy'))
