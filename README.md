@@ -130,4 +130,4 @@ The arXiv preprint is available at: [https://arxiv.org/abs/1901.07659](https://a
 
 ## Questions?
 
-The code and data are provided as is with no guarantees. If you have any questions, regarding the dataset or the code, you can contact me at (yalaudah [at] gmail [dot] com), or even better open an issue in this repo and we'll do our best to help.
+The code and data are provided as is with no guarantees. If you have any questions, regarding the dataset or the code, please open an issue in this repo and we'll do our best to help!
