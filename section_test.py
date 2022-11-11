@@ -14,7 +14,7 @@ from core.utils import np_to_tb
 
 
 def test(args):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
 
     log_dir, model_name = os.path.split(args.model_path)
     # load model:
@@ -28,7 +28,7 @@ def test(args):
     if "both" in args.split: 
         splits = ["test1", "test2"]
     else:
-        splits = args.split
+        splits = [args.split]
 
     for sdx, split in enumerate(splits):
         # define indices of the array
@@ -159,6 +159,8 @@ def test(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
+    parser.add_argument('--device', type=str, default='cpu',
+                        help='Cuda device or cpu execution')
     parser.add_argument('--model_path', nargs='?', type=str, default='path/to/model.pkl',
                         help='Path to the saved model')
     parser.add_argument('--split', nargs='?', type=str, default='both',
