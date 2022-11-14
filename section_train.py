@@ -56,7 +56,6 @@ def split_train_val(args, per_val=0.1):
 
 
 def train(args):
-
     device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
     # Generate the train and validation sets for the model:
     split_train_val(args, per_val=args.per_val)
@@ -66,8 +65,7 @@ def train(args):
     writer = SummaryWriter(log_dir=log_dir)
     # Setup Augmentations
     if args.aug:
-        data_aug = Compose(
-            [RandomRotate(10), RandomHorizontallyFlip(), AddNoise()])
+        data_aug = Compose([RandomRotate(10), RandomHorizontallyFlip(), AddNoise()])
     else:
         data_aug = None
 

@@ -191,23 +191,41 @@ class section_loader(data.Dataset):
         return len(self.sections[self.split])
 
     def __getitem__(self, index):
-
         section_name = self.sections[self.split][index]
         direction, number = section_name.split(sep='_')
 
-        if direction == 'i':
-            im = self.seismic[int(number),:,:]
-            lbl = self.labels[int(number),:,:]
-        elif direction == 'x':    
-            im = self.seismic[:,int(number),:]
-            lbl = self.labels[:,int(number),:]
+        try:
+            if direction == 'i':
+                im = self.seismic[int(number)-1:int(number)+2,:,:]
+                lbl = self.labels[int(number),:,:]
+            elif direction == 'x':    
+                im = self.seismic[:,int(number)-1:int(number)+2,:]
+                lbl = self.labels[:,int(number),:]
+        except:
+            if index == 0:
+                if direction == 'i':
+                    im = self.seismic[int(number)-1:int(number)+2,:,:]
+                    lbl = self.labels[int(number),:,:]
+                elif direction == 'x':    
+                    im = self.seismic[:,int(number)-1:int(number)+2,:]
+                    lbl = self.labels[:,int(number),:]
+                im  = np.repeat( im, [2,1], axis=0)
+            else:
+                if direction == 'i':
+                    im = self.seismic[int(number)-1:int(number)+1,:,:]
+                    lbl = self.labels[int(number),:,:]
+                elif direction == 'x':    
+                    im = self.seismic[:,int(number)-1:int(number)+1,:]
+                    lbl = self.labels[:,int(number),:]
+                im  = np.repeat( im, [1,2], axis=0)
+                lbl = np.repeat(lbl, [1,2], axis=0)
         
         if self.augmentations is not None:
             im, lbl = self.augmentations(im, lbl)
             
         if self.is_transform:
             im, lbl = self.transform(im, lbl)
-        return im, lbl
+        return torch.squeeze(im), torch.squeeze(lbl)
 
 
     def transform(self, img, lbl):
