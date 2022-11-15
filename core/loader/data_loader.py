@@ -207,7 +207,7 @@ class section_loader(data.Dataset):
                         img = np.repeat(img, [2,1], axis=0)
                     elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[0]):
                         img = self.seismic[int_number-1:int_number+1,:,:].transpose((0,2,1))
-                        img = np.repeat( img, [1,2], axis=0)
+                        img = np.repeat(img, [1,2], axis=0)
                 else:
                     raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
         except:
@@ -225,7 +225,7 @@ class section_loader(data.Dataset):
                         img = np.repeat(img, [2,1], axis=0)
                     elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[1]):
                         img = self.seismic[:,int_number-1:int_number+1,:].transpose((1,2,0))
-                        img = np.repeat( img, [1,2], axis=0)
+                        img = np.repeat(img, [1,2], axis=0)
                 else:
                     raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
         except:
