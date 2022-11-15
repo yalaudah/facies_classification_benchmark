@@ -76,18 +76,18 @@ class patch_loader(data.Dataset):
         idx, xdx, ddx = int(idx)+shift, int(xdx)+shift, int(ddx)+shift
 
         if direction == 'i':
-            im = self.seismic[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
+            img = self.seismic[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
             lbl = self.labels[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
         elif direction == 'x':    
-            im = self.seismic[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
+            img = self.seismic[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
             lbl = self.labels[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
 
         if self.augmentations is not None:
-            im, lbl = self.augmentations(im, lbl)
+            img, lbl = self.augmentations(img, lbl)
             
         if self.is_transform:
-            im, lbl = self.transform(im, lbl)
-        return im, lbl
+            img, lbl = self.transform(img, lbl)
+        return img, lbl
 
 
     def transform(self, img, lbl):
@@ -194,59 +194,57 @@ class section_loader(data.Dataset):
         section_name = self.sections[self.split][index]
         direction, number = section_name.split(sep='_')
 
-        try:
-            if direction == 'i':
-                im = self.seismic[int(number)-1:int(number)+2,:,:]
-                lbl = self.labels[int(number),:,:]
-            elif direction == 'x':    
-                im = self.seismic[:,int(number)-1:int(number)+2,:]
-                lbl = self.labels[:,int(number),:]
-        except:
-            if index == 0:
-                if direction == 'i':
-                    im = self.seismic[int(number)-1:int(number)+2,:,:]
-                    lbl = self.labels[int(number),:,:]
-                elif direction == 'x':    
-                    im = self.seismic[:,int(number)-1:int(number)+2,:]
-                    lbl = self.labels[:,int(number),:]
-                im  = np.repeat( im, [2,1], axis=0)
-            else:
-                if direction == 'i':
-                    im = self.seismic[int(number)-1:int(number)+1,:,:]
-                    lbl = self.labels[int(number),:,:]
-                elif direction == 'x':    
-                    im = self.seismic[:,int(number)-1:int(number)+1,:]
-                    lbl = self.labels[:,int(number),:]
-                im  = np.repeat( im, [1,2], axis=0)
-                lbl = np.repeat(lbl, [1,2], axis=0)
+        if direction == 'i':
+            try:
+                # img = self.seismic[int(number),:,:]
+                img = self.seismic[int(number)-1:int(number)+2,:,:]
+            except:
+                if number == '0': 
+                    img = self.seismic[int(number):int(number)+2,:,:]
+                    img = np.repeat(img, [2,1], axis=0)
+                else:
+                    img = self.seismic[int(number)-1:int(number)+1,:,:]
+                    img = np.repeat( img, [1,2], axis=0)
+            lbl = self.labels[int(number),:,:]
+        elif direction == 'x':    
+            try:
+                img = self.seismic[:,int(number)-1:int(number)+2,:]
+            except:
+                if number == '0': 
+                    img = self.seismic[:,int(number):int(number)+2,:]
+                    img = np.repeat(img, [2,1], axis=0)
+                else:
+                    img = self.seismic[:,int(number)-1:int(number)+1,:]
+                    img = np.repeat( img, [1,2], axis=0)
+            lbl = self.labels[:,int(number),:]
         
         if self.augmentations is not None:
-            im, lbl = self.augmentations(im, lbl)
+            img, lbl = self.augmentations(img, lbl)
             
         if self.is_transform:
-            im, lbl = self.transform(im, lbl)
-        return torch.squeeze(im), torch.squeeze(lbl)
+            img, lbl = self.transform(img, lbl)
+        return img, lbl
 
 
     def transform(self, img, lbl):
         img -= self.mean
 
         # to be in the BxCxHxW that PyTorch uses: 
-        img, lbl = img.T, lbl.T
+        # if len(img.shape) == 2:
+            # img, lbl = img.T, lbl.T
 
-        img = np.expand_dims(img,0)
-        lbl = np.expand_dims(lbl,0)
+        if len(img.shape) == 2:
+            img = np.expand_dims(img,0)
+            lbl = np.expand_dims(lbl,0)
 
-        img = torch.from_numpy(img)
-        img = img.float()
-        lbl = torch.from_numpy(lbl)
-        lbl = lbl.long()
+        img = torch.from_numpy(img).float()
+        lbl = torch.from_numpy(lbl).long()
                 
         return img, lbl
 
+
     def get_seismic_labels(self):
-        return np.asarray([ [69,117,180], [145,191,219], [224,243,248], [254,224,144], [252,141,89],
-                          [215,48,39]])
+        return np.asarray([ [69,117,180], [145,191,219], [224,243,248], [254,224,144], [252,141,89], [215,48,39]])
 
 
     def decode_segmap(self, label_mask, plot=False):
