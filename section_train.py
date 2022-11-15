@@ -95,9 +95,9 @@ def train(args):
 
     trainloader = data.DataLoader(train_set, batch_size=args.batch_size,
                                   sampler=CustomSamplerTrain(train_list),
-                                  num_workers=0, shuffle=shuffle)
+                                  num_workers=4, shuffle=shuffle)
     valloader = data.DataLoader(val_set, batch_size=args.batch_size,
-                                sampler=CustomSamplerVal(val_list), num_workers=1)
+                                sampler=CustomSamplerVal(val_list), num_workers=4)
 
     # Setup Metrics
     running_metrics = runningScore(n_classes)
