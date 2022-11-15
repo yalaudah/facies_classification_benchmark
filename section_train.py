@@ -20,11 +20,11 @@ from core.models.section_deconvnet import section_deconvnet
 from core.utils import np_to_tb
 
 # Fix the random seeds: 
-numpy.random.seed(seed=2019)
+numpy.random.seed(seed=2022)
 torch.backends.cudnn.deterministic = True
-torch.manual_seed(2019)
+torch.manual_seed(2022)
 if torch.cuda.is_available(): 
-    torch.cuda.manual_seed_all(2019)
+    torch.cuda.manual_seed_all(2022)
 
 
 def split_train_val(args, per_val=0.1):
@@ -95,9 +95,9 @@ def train(args):
 
     trainloader = data.DataLoader(train_set, batch_size=args.batch_size,
                                   sampler=CustomSamplerTrain(train_list),
-                                  num_workers=4, shuffle=shuffle)
+                                  num_workers=0, shuffle=shuffle)
     valloader = data.DataLoader(val_set, batch_size=args.batch_size,
-                                sampler=CustomSamplerVal(val_list), num_workers=4)
+                                sampler=CustomSamplerVal(val_list), num_workers=1)
 
     # Setup Metrics
     running_metrics = runningScore(n_classes)
@@ -144,6 +144,7 @@ def train(args):
         loss_train, total_iteration = 0, 0
 
         for i, (images, labels) in enumerate(trainloader):
+            print(i, images.shape, labels.shape)
             image_original, labels_original = images, labels
             images, labels = images.to(device), labels.to(device)
 
@@ -297,7 +298,7 @@ if __name__ == '__main__':
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
     parser.add_argument('--device', type=str, default='cpu',
                         help='Cuda device or cpu execution')
-    parser.add_argument('--n_channels', type=int, default=1,
+    parser.add_argument('--n_channels', type=int, default=3,
                         help='# of input channels')
     parser.add_argument('--n_epoch', type=int, default=61,
                         help='# of the epochs')
