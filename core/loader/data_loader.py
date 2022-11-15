@@ -194,37 +194,42 @@ class section_loader(data.Dataset):
         section_name = self.sections[self.split][index]
         direction, number = section_name.split(sep='_')
         int_number = int(number)
-        print(index, section_name, self.seismic[int_number-1:int_number+2,:,:].shape)
 
-        # if index == 836: breakpoint()
+        try:
+            if direction == 'i':
+                lbl = self.labels[int_number,:,:].transpose((1,0))
+                if self.n_channels == 1:
+                    img = self.seismic[int_number,:,:].transpose((1,0))
+                elif self.n_channels == 3:
+                    img = self.seismic[int_number-1:int_number+2,:,:].transpose((0,2,1))
+                    if (img.shape[0] <= 2) and (int_number-1 < 0):
+                        img = self.seismic[int_number:int_number+2,:,:].transpose((0,2,1))
+                        img = np.repeat(img, [2,1], axis=0)
+                    elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[0]):
+                        img = self.seismic[int_number-1:int_number+1,:,:].transpose((0,2,1))
+                        img = np.repeat( img, [1,2], axis=0)
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
+        except:
+            raise RuntimeError(f'Batch {index}: \t section [{section_name}] \t {self.seismic[int_number,:,:].shape} {self.seismic[int_number-1:int_number+2,:,:].shape}')
 
-        if direction == 'i':
-            lbl = self.labels[int_number,:,:]
-            if self.n_channels == 1:
-                img = self.seismic[int_number,:,:]
-            elif self.n_channels == 3:
-                img = self.seismic[int_number-1:int_number+2,:,:]
-                if (img.shape[0] < 3) and (int_number-1 < 0):
-                    img = self.seismic[int_number:int_number+2,:,:]
-                    img = np.repeat(img, [2,1], axis=0)
-                elif (img.shape[0] < 3) and (int_number+1 >= self.seismic.shape[0]):
-                    img = np.repeat( img, [1,2], axis=0)
-            else:
-                raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
-            
-        elif direction == 'x':  
-            lbl = self.labels[:,int_number,:]  
-            if self.n_channels == 1:
-                img = self.seismic[:,int_number,:]
-            elif self.n_channels == 3:
-                img = self.seismic[:,int_number-1:int_number+2,:]
-                if (img.shape[0] < 3) and (int_number-1 < 0):
-                    img = self.seismic[:,int_number:int_number+2,:]
-                    img = np.repeat(img, [2,1], axis=0)
-                elif (img.shape[0] < 3) and (int_number+1 >= self.seismic.shape[1]):
-                    img = np.repeat( img, [1,2], axis=0)
-            else:
-                raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
+        try:        
+            if direction == 'x':  
+                lbl = self.labels[:,int_number,:].transpose((1,0))
+                if self.n_channels == 1:
+                    img = self.seismic[:,int_number,:].transpose((1,0))
+                elif self.n_channels == 3:
+                    img = self.seismic[:,int_number-1:int_number+2,:].transpose((1,2,0))
+                    if (img.shape[0] <= 2) and (int_number-1 < 0):
+                        img = self.seismic[:,int_number:int_number+2,:].transpose((1,2,0))
+                        img = np.repeat(img, [2,1], axis=0)
+                    elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[1]):
+                        img = self.seismic[:,int_number-1:int_number+1,:].transpose((1,2,0))
+                        img = np.repeat( img, [1,2], axis=0)
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
+        except:
+            raise RuntimeError(f'Batch {index}: \t section [{section_name}] \t {self.seismic[:,int_number,:].shape} {self.seismic[:,int_number-1:int_number+2,:].shape}')
         
         if self.augmentations is not None:
             img, lbl = self.augmentations(img, lbl)
@@ -241,7 +246,7 @@ class section_loader(data.Dataset):
         # if len(img.shape) == 2:
             # img, lbl = img.T, lbl.T
 
-        # to be in the BxCxWxH that PyTorch uses: 
+        # to be in the BxCxHxW that PyTorch uses: 
         if len(img.shape) == 2:
             img = np.expand_dims(img,0)
         if len(lbl.shape) == 2:
