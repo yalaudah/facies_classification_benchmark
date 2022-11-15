@@ -13,11 +13,10 @@ from torch.utils import data
 from tqdm import tqdm
 
 import core.loss
-from core.augmentations import (
-    Compose, RandomHorizontallyFlip, RandomRotate, AddNoise)
+from core.augmentations import Compose, RandomHorizontallyFlip, RandomRotate, AddNoise
 from core.loader.data_loader import *
 from core.metrics import runningScore
-from core.models import get_model
+from core.models.section_deconvnet import section_deconvnet
 from core.utils import np_to_tb
 
 # Fix the random seeds: 
@@ -69,10 +68,9 @@ def train(args):
     else:
         data_aug = None
 
-    train_set = section_loader(is_transform=True, split='train', augmentations=data_aug)
-
-    # Without Augmentation:
-    val_set = section_loader(is_transform=True, split='val',)
+    # Traning accepts augmentation, unlike validation:
+    train_set = section_loader(n_channels=args.n_channels, split='train', is_transform=True, augmentations=data_aug)
+    val_set = section_loader(n_channels=args.n_channels, split='val', is_transform=True)
 
     n_classes = train_set.n_classes
 
@@ -113,7 +111,8 @@ def train(args):
         else:
             print("No checkpoint found at '{}'".format(args.resume))
     else:
-        model = get_model(args.arch, args.pretrained, n_classes)
+        # model = get_model(args.arch, args.pretrained, n_classes)
+        model = section_deconvnet(n_channels=args.n_channels, n_classes=n_classes, learned_billinear=False)
 
     # Use as many GPUs as we can
     # model = torch.nn.DataParallel(model, device_ids=[5,7])
@@ -298,6 +297,8 @@ if __name__ == '__main__':
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
     parser.add_argument('--device', type=str, default='cpu',
                         help='Cuda device or cpu execution')
+    parser.add_argument('--n_channels', type=int, default=1,
+                        help='# of input channels')
     parser.add_argument('--n_epoch', type=int, default=61,
                         help='# of the epochs')
     parser.add_argument('--batch_size', type=int, default=8,

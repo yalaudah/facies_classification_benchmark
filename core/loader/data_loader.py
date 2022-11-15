@@ -144,10 +144,10 @@ class section_loader(data.Dataset):
     """
         Data loader for the section-based deconvnet
     """
-    def __init__(self, split='train', is_transform=True,
-                 augmentations=None):
+    def __init__(self, split='train', n_channels=1, is_transform=True, augmentations=None):
         self.root = 'data/'
         self.split = split
+        self.n_channels = n_channels
         self.is_transform = is_transform
         self.augmentations = augmentations
         self.n_classes = 6 
@@ -196,8 +196,12 @@ class section_loader(data.Dataset):
 
         if direction == 'i':
             try:
-                # img = self.seismic[int(number),:,:]
-                img = self.seismic[int(number)-1:int(number)+2,:,:]
+                if self.n_channels == 1:
+                    img = self.seismic[int(number),:,:]
+                elif self.n_channels == 3:
+                    img = self.seismic[int(number)-1:int(number)+2,:,:]
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
             except:
                 if number == '0': 
                     img = self.seismic[int(number):int(number)+2,:,:]
@@ -208,7 +212,12 @@ class section_loader(data.Dataset):
             lbl = self.labels[int(number),:,:]
         elif direction == 'x':    
             try:
-                img = self.seismic[:,int(number)-1:int(number)+2,:]
+                if self.n_channels == 1:
+                    img = self.seismic[:,int(number),:]
+                elif self.n_channels == 3:
+                    img = self.seismic[:,int(number)-1:int(number)+2,:]
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
             except:
                 if number == '0': 
                     img = self.seismic[:,int(number):int(number)+2,:]
