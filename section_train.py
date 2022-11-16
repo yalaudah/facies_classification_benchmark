@@ -298,7 +298,7 @@ if __name__ == '__main__':
                         help='Architecture to use [\'patch_deconvnet, path_deconvnet_skip, section_deconvnet, section_deconvnet_skip\']')
     parser.add_argument('--device', type=str, default='cpu',
                         help='Cuda device or cpu execution')
-    parser.add_argument('--n_channels', type=int, default=3,
+    parser.add_argument('--n_channels', type=int, default=1,
                         help='# of input channels')
     parser.add_argument('--n_epoch', type=int, default=61,
                         help='# of the epochs')

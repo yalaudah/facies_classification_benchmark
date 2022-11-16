@@ -160,7 +160,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
     parser.add_argument('--device', type=str, default='cpu',
                         help='Cuda device or cpu execution')
-    parser.add_argument('--n_channels', type=int, default=3,
+    parser.add_argument('--n_channels', type=int, default=1,
                         help='# of input channels')
     parser.add_argument('--model_path', nargs='?', type=str, default='runs/Nov15_215216_section_deconvnet/section_deconvnet_model.pkl',
                         help='Path to the saved model')
