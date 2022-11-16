@@ -70,7 +70,7 @@ def train(args):
 
     # Traning accepts augmentation, unlike validation:
     train_set = section_loader(n_channels=args.n_channels, split='train', is_transform=True, augmentations=data_aug)
-    val_set = section_loader(n_channels=args.n_channels, split='val', is_transform=True)
+    valid_set = section_loader(n_channels=args.n_channels, split='val', is_transform=True)
 
     n_classes = train_set.n_classes
 
@@ -96,7 +96,7 @@ def train(args):
     trainloader = data.DataLoader(train_set, batch_size=args.batch_size,
                                   sampler=CustomSamplerTrain(train_list),
                                   num_workers=4, shuffle=shuffle)
-    valloader = data.DataLoader(val_set, batch_size=args.batch_size,
+    valloader = data.DataLoader(valid_set, batch_size=args.batch_size,
                                 sampler=CustomSamplerVal(val_list), num_workers=4)
 
     # Setup Metrics
@@ -233,7 +233,7 @@ def train(args):
                     total_iteration_val = total_iteration_val + 1
 
                     if (i_val) % 20 == 0:
-                        print("Epoch [%d/%d] validation Loss: %.4f" % (epoch, args.n_epoch, loss.item()))
+                        print("Epoch [%d/%d] validation Loss: %.4f" % (epoch + 1, args.n_epoch, loss.item()))
 
                     numbers = [0]
                     if i_val in numbers:

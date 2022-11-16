@@ -18,7 +18,7 @@ def test(args):
 
     log_dir, model_name = os.path.split(args.model_path)
     # load model:
-    model = torch.load(args.model_path)
+    model = torch.load(args.model_path, map_location=device)
     model = model.to(device)  # Send to GPU if available
     writer = SummaryWriter(log_dir=log_dir)
 
@@ -49,12 +49,11 @@ def test(args):
 
         list_test = i_list + x_list
 
-        file_object = open(
-            pjoin('data', 'splits', 'section_' + split + '.txt'), 'w')
+        file_object = open(pjoin('data', 'splits', 'section_' + split + '.txt'), 'w')
         file_object.write('\n'.join(list_test))
         file_object.close()
 
-        test_set = section_loader(is_transform=True, split=split, augmentations=None)
+        test_set = section_loader(n_channels=args.n_channels, split=split, is_transform=True, augmentations=None)
         n_classes = test_set.n_classes
 
         test_loader = data.DataLoader(test_set,
@@ -161,7 +160,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Params')
     parser.add_argument('--device', type=str, default='cpu',
                         help='Cuda device or cpu execution')
-    parser.add_argument('--model_path', nargs='?', type=str, default='path/to/model.pkl',
+    parser.add_argument('--n_channels', type=int, default=3,
+                        help='# of input channels')
+    parser.add_argument('--model_path', nargs='?', type=str, default='runs/Nov15_215216_section_deconvnet/section_deconvnet_model.pkl',
                         help='Path to the saved model')
     parser.add_argument('--split', nargs='?', type=str, default='both',
                         help='Choose from: "test1", "test2", or "both" to change which region to test on')
