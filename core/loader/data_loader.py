@@ -262,7 +262,7 @@ class section_loader(data.Dataset):
         return np.asarray([ [69,117,180], [145,191,219], [224,243,248], [254,224,144], [252,141,89], [215,48,39]])
 
 
-    def decode_segmap(self, label_mask, plot=False):
+    def decode_segmap(self, label_mask, plot=False, save_name=None):
         """Decode segmentation class labels into a color image
         Args:
             label_mask (np.ndarray): an (M,N) array of integer values denoting
@@ -284,6 +284,10 @@ class section_loader(data.Dataset):
         rgb[:, :, 0] = r / 255.0
         rgb[:, :, 1] = g / 255.0
         rgb[:, :, 2] = b / 255.0
+        if save_name is not None: 
+            plt.imshow(rgb)
+            plt.show()
+            plt.savefig(save_name)
         if plot:
             plt.imshow(rgb)
             plt.show()
