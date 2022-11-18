@@ -2,7 +2,7 @@ import torch.nn as nn
 
 class section_deconvnet(nn.Module):
 
-    def __init__(self, n_classes=4, learned_billinear=False):
+    def __init__(self, n_channels=1, n_classes=4, learned_billinear=False):
         super(section_deconvnet, self).__init__()
         self.learned_billinear = learned_billinear
         self.n_classes = n_classes
@@ -10,7 +10,7 @@ class section_deconvnet(nn.Module):
         self.conv_block1 = nn.Sequential(
 
             # conv1_1
-            nn.Conv2d(1, 64, 3, padding=1),
+            nn.Conv2d(n_channels, 64, 3, padding=1),
             nn.BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True),
             nn.ReLU(inplace=True),
 
@@ -302,9 +302,7 @@ class section_deconvnet(nn.Module):
             for l1, l2 in zip(features[ranges[idx][0]:ranges[idx][1]], conv_block):
                 if isinstance(l1, nn.Conv2d) and isinstance(l2, nn.Conv2d):
                     if i_layer == 0:
-                        l2.weight.data = ((l1.weight.data[:, 0, :, :] + l1.weight.data[:, 1, :, :] + l1.weight.data[:,
-                                                                                                     2, :,
-                                                                                                     :]) / 3.0).view(
+                        l2.weight.data = ((l1.weight.data[:, 0, :, :] + l1.weight.data[:, 1, :, :] + l1.weight.data[:, 2, :, :]) / 3.0).view(
                             l2.weight.size())
                         l2.bias.data = l1.bias.data
                         i_layer = i_layer + 1

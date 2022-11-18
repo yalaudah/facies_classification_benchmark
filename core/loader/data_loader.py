@@ -76,18 +76,18 @@ class patch_loader(data.Dataset):
         idx, xdx, ddx = int(idx)+shift, int(xdx)+shift, int(ddx)+shift
 
         if direction == 'i':
-            im = self.seismic[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
+            img = self.seismic[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
             lbl = self.labels[idx,xdx:xdx+self.patch_size,ddx:ddx+self.patch_size]
         elif direction == 'x':    
-            im = self.seismic[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
+            img = self.seismic[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
             lbl = self.labels[idx: idx+self.patch_size, xdx, ddx:ddx+self.patch_size]
 
         if self.augmentations is not None:
-            im, lbl = self.augmentations(im, lbl)
+            img, lbl = self.augmentations(img, lbl)
             
         if self.is_transform:
-            im, lbl = self.transform(im, lbl)
-        return im, lbl
+            img, lbl = self.transform(img, lbl)
+        return img, lbl
 
 
     def transform(self, img, lbl):
@@ -144,10 +144,10 @@ class section_loader(data.Dataset):
     """
         Data loader for the section-based deconvnet
     """
-    def __init__(self, split='train', is_transform=True,
-                 augmentations=None):
+    def __init__(self, split='train', n_channels=1, is_transform=True, augmentations=None):
         self.root = 'data/'
         self.split = split
+        self.n_channels = n_channels
         self.is_transform = is_transform
         self.augmentations = augmentations
         self.n_classes = 6 
@@ -191,47 +191,78 @@ class section_loader(data.Dataset):
         return len(self.sections[self.split])
 
     def __getitem__(self, index):
-
         section_name = self.sections[self.split][index]
         direction, number = section_name.split(sep='_')
+        int_number = int(number)
 
-        if direction == 'i':
-            im = self.seismic[int(number),:,:]
-            lbl = self.labels[int(number),:,:]
-        elif direction == 'x':    
-            im = self.seismic[:,int(number),:]
-            lbl = self.labels[:,int(number),:]
+        try:
+            if direction == 'i':
+                lbl = self.labels[int_number,:,:].transpose((1,0))
+                if self.n_channels == 1:
+                    img = self.seismic[int_number,:,:].transpose((1,0))
+                elif self.n_channels == 3:
+                    img = self.seismic[int_number-1:int_number+2,:,:].transpose((0,2,1))
+                    if (img.shape[0] <= 2) and (int_number-1 < 0):
+                        img = self.seismic[int_number:int_number+2,:,:].transpose((0,2,1))
+                        img = np.repeat(img, [2,1], axis=0)
+                    elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[0]):
+                        img = self.seismic[int_number-1:int_number+1,:,:].transpose((0,2,1))
+                        img = np.repeat(img, [1,2], axis=0)
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
+        except:
+            raise RuntimeError(f'Batch {index}: \t section [{section_name}] \t {self.seismic[int_number,:,:].shape} {self.seismic[int_number-1:int_number+2,:,:].shape}')
+
+        try:        
+            if direction == 'x':  
+                lbl = self.labels[:,int_number,:].transpose((1,0))
+                if self.n_channels == 1:
+                    img = self.seismic[:,int_number,:].transpose((1,0))
+                elif self.n_channels == 3:
+                    img = self.seismic[:,int_number-1:int_number+2,:].transpose((1,2,0))
+                    if (img.shape[0] <= 2) and (int_number-1 < 0):
+                        img = self.seismic[:,int_number:int_number+2,:].transpose((1,2,0))
+                        img = np.repeat(img, [2,1], axis=0)
+                    elif (img.shape[0] <= 2) and (int_number+1 >= self.seismic.shape[1]):
+                        img = self.seismic[:,int_number-1:int_number+1,:].transpose((1,2,0))
+                        img = np.repeat(img, [1,2], axis=0)
+                else:
+                    raise RuntimeError(f'No implementation for self.n_channels={self.n_channels}')
+        except:
+            raise RuntimeError(f'Batch {index}: \t section [{section_name}] \t {self.seismic[:,int_number,:].shape} {self.seismic[:,int_number-1:int_number+2,:].shape}')
         
         if self.augmentations is not None:
-            im, lbl = self.augmentations(im, lbl)
+            img, lbl = self.augmentations(img, lbl)
             
         if self.is_transform:
-            im, lbl = self.transform(im, lbl)
-        return im, lbl
+            img, lbl = self.transform(img, lbl)
+        return img, lbl
 
 
     def transform(self, img, lbl):
         img -= self.mean
 
         # to be in the BxCxHxW that PyTorch uses: 
-        img, lbl = img.T, lbl.T
+        # if len(img.shape) == 2:
+            # img, lbl = img.T, lbl.T
 
-        img = np.expand_dims(img,0)
-        lbl = np.expand_dims(lbl,0)
+        # to be in the BxCxHxW that PyTorch uses: 
+        if len(img.shape) == 2:
+            img = np.expand_dims(img,0)
+        if len(lbl.shape) == 2:
+            lbl = np.expand_dims(lbl,0)
 
-        img = torch.from_numpy(img)
-        img = img.float()
-        lbl = torch.from_numpy(lbl)
-        lbl = lbl.long()
+        img = torch.from_numpy(img).float()
+        lbl = torch.from_numpy(lbl).long()
                 
         return img, lbl
 
+
     def get_seismic_labels(self):
-        return np.asarray([ [69,117,180], [145,191,219], [224,243,248], [254,224,144], [252,141,89],
-                          [215,48,39]])
+        return np.asarray([ [69,117,180], [145,191,219], [224,243,248], [254,224,144], [252,141,89], [215,48,39]])
 
 
-    def decode_segmap(self, label_mask, plot=False):
+    def decode_segmap(self, label_mask, plot=False, save_name=None):
         """Decode segmentation class labels into a color image
         Args:
             label_mask (np.ndarray): an (M,N) array of integer values denoting
@@ -253,6 +284,10 @@ class section_loader(data.Dataset):
         rgb[:, :, 0] = r / 255.0
         rgb[:, :, 1] = g / 255.0
         rgb[:, :, 2] = b / 255.0
+        if save_name is not None: 
+            plt.imshow(rgb)
+            plt.show()
+            plt.savefig(save_name)
         if plot:
             plt.imshow(rgb)
             plt.show()

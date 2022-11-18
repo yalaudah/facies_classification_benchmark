@@ -2,11 +2,11 @@ import torchvision.models as models
 from core.models.patch_deconvnet import *
 from core.models.section_deconvnet import *
 
-def get_model(name, pretrained, n_classes):
+def get_model(name, pretrained, n_channels, n_classes):
     model = _get_model_instance(name)
 
     if name in ['section_deconvnet','patch_deconvnet']:
-        model = model(n_classes=n_classes)
+        model = model(n_channels=n_channels, n_classes=n_classes)
         vgg16 = models.vgg16(pretrained=pretrained)
         model.init_vgg16_params(vgg16)
     else:
